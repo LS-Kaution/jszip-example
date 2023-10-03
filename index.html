@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JSZip Example</title>
+  </head>
+  <body>
+    <input type="file" id="zipInput" accept=".zip" />
+    <p id="xmlCountText">Cantidad de slides:</p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+    <script>
+      document
+        .getElementById("zipInput")
+        .addEventListener("change", function (e) {
+          // Acá se obtiene el .zip
+          const zipFile = e.target.files[0];
+
+          if (zipFile) {
+            JSZip.loadAsync(zipFile)
+              .then(function (zip) {
+                // Acceso a carpeta "ppt"
+                let pptFolder = zip.folder("ppt");
+
+                // En caso de que ppt no exista
+                if (!pptFolder) {
+                  console.error(
+                    "La carpeta 'ppt' no existe en el archivo ZIP."
+                  );
+                  return;
+                }
+
+                // Acceso a la carpeta "slides" dentro de "ppt"
+                let slidesFolder = pptFolder.folder("slides");
+
+                // En caso de que slides no exista
+                if (!slidesFolder) {
+                  console.error(
+                    "La carpeta 'slides' no existe en la carpeta 'ppt'."
+                  );
+                  return;
+                }
+
+                // Contador de archivos .xml
+                let xmlFileCount = 0;
+
+                // forEach de todo archivo con extensión .xml
+                slidesFolder.forEach(function (relativePath, file) {
+                  // Verifica si el archivo termina en ".xml"
+                  if (relativePath.endsWith(".xml")) {
+                    xmlFileCount++;
+                  }
+                });
+
+                // Impresión de cantidad de .xml en consola
+                console.log(
+                  "Número de archivos .xml en la carpeta 'slides': " +
+                    xmlFileCount
+                );
+
+                // Actualización de <p>
+                let xmlCountText = document.getElementById("xmlCountText");
+                xmlCountText.textContent =
+                  "Cantidad de slides: " + xmlFileCount;
+              })
+              .catch(function (error) {
+                console.error("Error al cargar el archivo ZIP: " + error);
+              });
+          }
+        });
+    </script>
+  </body>
+</html>

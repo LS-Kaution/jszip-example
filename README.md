@@ -1,1 +1,2 @@
 # jszip-example
+In order to use this program you must use a PowerPoint file with several slides, then save it and once saved you must rename the PowerPoint file to replace its extension ".pptx" to ".zip"; once done you can load your .zip file and the program will count how many slides (.xml files) your PowerPoint file has.
